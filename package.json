@@ -2,7 +2,7 @@
   "name": "@nclinic/broadcast",
   "version": "1.0.0",
   "description": "push message to server return to javascript",
-  "main": "dist/broadcastnclinic.js",
+  "main": "dist/broadcast.js",
   "scripts": {
     "build": "your-build-script-here",
     "test": "your-test-script-here"
