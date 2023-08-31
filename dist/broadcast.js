@@ -7,13 +7,13 @@
         module.exports = factory(require('jquery'));
     } else {
         // Global
-        root.BBroadCast = factory(root.jQuery);
+        root.Broadcast = factory(root.jQuery);
     }
 }(typeof self !== 'undefined' ? self : this, function ($) {
 
     "use strict";
 
-    var BBroadCast = function (channel, option = {}) {
+    var Broadcast = function (channel, option = {}) {
 
         this.open = false;
         this.channelActive = channel;
@@ -73,7 +73,7 @@
      * @param {string} event 
      * @param {*} data 
      */
-    BBroadCast.prototype.sendMessage = function (channel, event, data) {
+    Broadcast.prototype.sendMessage = function (channel, event, data) {
         if (this.open) {
             this.socket.send(JSON.stringify({
                 channel: channel,
@@ -83,7 +83,7 @@
         }
     }
 
-    BBroadCast.prototype.subscribe = function (channelName) {
+    Broadcast.prototype.subscribe = function (channelName) {
         const channel = new Channel(this, channelName);
         this.channels[channelName] = channel;
         return channel;
@@ -122,5 +122,5 @@
     }
 
 
-    return BBroadCast;
+    return Broadcast;
 }));
