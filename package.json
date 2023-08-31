@@ -1,0 +1,23 @@
+{
+  "name": "@nclinic/broadcast",
+  "version": "1.0.0",
+  "description": "push message to server return to javascript",
+  "main": "dist/broadcastnclinic.js",
+  "scripts": {
+    "build": "your-build-script-here",
+    "test": "your-test-script-here"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/twobe2556/Broadcast-http-js.git"
+  },
+  "keywords": [
+    "broadcast",
+    "nclinic"
+  ],
+  "author": "nutthapong <nutthapong.phensuk@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "jquery": "^3.6.0"
+  }
+}
