@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/gh/twobe2556/Broadcast-http-js/dist/broadcast.js"></script>
+</head>
+
+<body>
+    <input type="text" id="fname" placeholder="Enter name" value="">
+    <input type="text" id="message" placeholder="Enter your message">
+    <!-- <button onclick="sendMessage()">Send</button> -->
+    <button id="triggerButton">Send</button>
+    <div class="" id="output"></div>
+
+    <script type="module">
+        // 
+
+        const bs = new BBroadCast("nc", {
+            serverAddress: "server.com",
+            port: "9000"
+        });
+
+        setTimeout(() => {
+            bs.sendMessage("nc", "chat", {
+            name: "bank",
+            message: "test"
+        });
+        }, 3000);
+        
+        // console.log(bs);
+        const channel = bs.subscribe("nc")
+        const output = document.getElementById('output');
+
+        channel.bind('chat', function (data) {
+            output.innerHTML += `<p>(${data.name}) - ${data.message}</p>`;
+        });
+
+        const triggerButton = document.getElementById('triggerButton');
+        const fname = document.getElementById('fname');
+        const msg = document.getElementById('message');
+        triggerButton.addEventListener('click', function () {
+
+            if (fname.value == "") {
+                alert('กรอกชื่อก่อนกดปุ่มส่ง')
+                fname.focus();
+                return;
+            }
+            if (msg.value == "") {
+                alert('กรอกข้อความก่อนกดปุ่มส่ง')
+                msg.focus();
+                return;
+            }
+            bs.sendMessage("nc", "chat", {
+                name: fname.value,
+                message: msg.value
+            });
+            output.innerHTML += `<p style="color:red">(me) - ${msg.value}</p>`;
+            msg.value = "";
+        });
+        //
+    </script>
+</body>
+
+</html>
