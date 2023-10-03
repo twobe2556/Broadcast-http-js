@@ -41,13 +41,12 @@
             console.log('Disconnected from the server');
             self.open = false;
         }
+
         self.socket.onmessage = (event) => {
             const data = JSON.parse(event.data);
             const { channel, event: eventType, data: eventData } = data;
 
             let res_channel = self.channels[channel];
-            let res_event = res_channel.events[eventType];
-
             let data_callback = {
                 "channel": channel,
                 "event": eventType
@@ -61,10 +60,40 @@
                 });
             }
 
-            if (res_channel && res_event) {
-                res_event(data_callback);
+            if (res_channel) {
+                // ตรวจสอบว่า eventType มีการเก็บ callback หรือไม่
+                if (res_channel.events[eventType]) {
+                    // เรียก callback ทั้งหมดที่เก็บในอาร์เรย์ของ callback
+                    res_channel.events[eventType].forEach(callback => {
+                        callback(data_callback);
+                    });
+                }
             }
         }
+        // self.socket.onmessage = (event) => {
+        //     const data = JSON.parse(event.data);
+        //     const { channel, event: eventType, data: eventData } = data;
+
+        //     let res_channel = self.channels[channel];
+        //     let res_event = res_channel.events[eventType];
+
+        //     let data_callback = {
+        //         "channel": channel,
+        //         "event": eventType
+        //     };
+
+        //     if (typeof eventData === 'string') {
+        //         data_callback.message = eventData;
+        //     } else if (typeof eventData === 'object' && eventData !== null) {
+        //         Object.keys(eventData).forEach(key => {
+        //             data_callback[key] = eventData[key];
+        //         });
+        //     }
+
+        //     if (res_channel && res_event) {
+        //         res_event(data_callback);
+        //     }
+        // }
 
     }
     /**
@@ -117,8 +146,18 @@
         }
 
         bind(eventType, callback) {
-            this.events[eventType] = callback;
+            // ตรวจสอบว่าชื่อ eventType มีการเก็บไว้แล้วหรือไม่
+            if (this.events[eventType]) {
+                // ถ้ามีแล้วให้เพิ่ม callback ใหม่ในอาร์เรย์ของ callback
+                this.events[eventType].push(callback);
+            } else {
+                // ถ้ายังไม่มีให้สร้างอาร์เรย์ของ callback ใหม่
+                this.events[eventType] = [callback];
+            }
         }
+        // bind(eventType, callback) {
+        //     this.events[eventType] = callback;
+        // }
     }
 
 
