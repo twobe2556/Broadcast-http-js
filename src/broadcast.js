@@ -17,7 +17,7 @@
 
         this.open = false;
         this.channelActive = channel;
-        this.port = validateTextNotNull(option.port, option.port, "9000");
+        this.port = validateTextNotNull(option.port, option.port, "");
         this.ssl = validateTextNotNull(option.ssl, option.ssl === true ? "wss" : "ws", "ws");
         this.serverAddress = this.ssl +
             "://" + validateTextNotNull(option.serverAddress, option.serverAddress, "") +
