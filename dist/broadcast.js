@@ -21,7 +21,7 @@
         this.ssl = validateTextNotNull(option.ssl, option.ssl === true ? "wss" : "ws", "ws");
         this.serverAddress = this.ssl +
             "://" + validateTextNotNull(option.serverAddress, option.serverAddress, "") +
-            validateTextNotNull(option.serverAddress, ":" + this.port, "");
+            validateTextNotNull(this.port, ":" + this.port, "");
         this.channels = {};
 
 
