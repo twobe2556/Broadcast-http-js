@@ -29,72 +29,51 @@
     }
 
     let connect = function (_this) {
-        let self = _this;
+        try {
+            let self = _this;
 
-        self.socket = new WebSocket(self.serverAddress + "?channel=" + self.channelActive);
+            self.socket = new WebSocket(self.serverAddress + "?channel=" + self.channelActive);
 
-        self.socket.onopen = (event) => {
-            console.log('Connected to the server');
-            self.open = true;
-        }
-        self.socket.onclose = (event) => {
-            console.log('Disconnected from the server');
-            self.open = false;
-        }
-
-        self.socket.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-            const { channel, event: eventType, data: eventData } = data;
-
-            let res_channel = self.channels[channel];
-            let data_callback = {
-                "channel": channel,
-                "event": eventType
-            };
-
-            if (typeof eventData === 'string') {
-                data_callback.message = eventData;
-            } else if (typeof eventData === 'object' && eventData !== null) {
-                Object.keys(eventData).forEach(key => {
-                    data_callback[key] = eventData[key];
-                });
+            self.socket.onopen = (event) => {
+                console.log('Connected to the server');
+                self.open = true;
+            }
+            self.socket.onclose = (event) => {
+                console.log('Disconnected from the server');
+                self.open = false;
             }
 
-            if (res_channel) {
-                // ตรวจสอบว่า eventType มีการเก็บ callback หรือไม่
-                if (res_channel.events[eventType]) {
-                    // เรียก callback ทั้งหมดที่เก็บในอาร์เรย์ของ callback
-                    res_channel.events[eventType].forEach(callback => {
-                        callback(data_callback);
+            self.socket.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                const { channel, event: eventType, data: eventData } = data;
+
+                let res_channel = self.channels[channel];
+                let data_callback = {
+                    "channel": channel,
+                    "event": eventType
+                };
+
+                if (typeof eventData === 'string') {
+                    data_callback.message = eventData;
+                } else if (typeof eventData === 'object' && eventData !== null) {
+                    Object.keys(eventData).forEach(key => {
+                        data_callback[key] = eventData[key];
                     });
                 }
+
+                if (res_channel) {
+                    // ตรวจสอบว่า eventType มีการเก็บ callback หรือไม่
+                    if (res_channel.events[eventType]) {
+                        // เรียก callback ทั้งหมดที่เก็บในอาร์เรย์ของ callback
+                        res_channel.events[eventType].forEach(callback => {
+                            callback(data_callback);
+                        });
+                    }
+                }
             }
+        } catch (error) {
+
         }
-        // self.socket.onmessage = (event) => {
-        //     const data = JSON.parse(event.data);
-        //     const { channel, event: eventType, data: eventData } = data;
-
-        //     let res_channel = self.channels[channel];
-        //     let res_event = res_channel.events[eventType];
-
-        //     let data_callback = {
-        //         "channel": channel,
-        //         "event": eventType
-        //     };
-
-        //     if (typeof eventData === 'string') {
-        //         data_callback.message = eventData;
-        //     } else if (typeof eventData === 'object' && eventData !== null) {
-        //         Object.keys(eventData).forEach(key => {
-        //             data_callback[key] = eventData[key];
-        //         });
-        //     }
-
-        //     if (res_channel && res_event) {
-        //         res_event(data_callback);
-        //     }
-        // }
-
     }
     /**
      * 
